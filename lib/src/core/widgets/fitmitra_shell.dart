@@ -1,3 +1,4 @@
+import 'package:fitmitra/src/core/models/membership_tier.dart';
 import 'package:fitmitra/src/core/utils/responsive.dart';
 import 'package:fitmitra/src/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';

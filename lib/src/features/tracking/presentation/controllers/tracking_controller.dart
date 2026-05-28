@@ -8,30 +8,22 @@ import 'package:fitmitra/src/features/auth/presentation/controllers/auth_control
 import 'package:fitmitra/src/features/tracking/domain/models/tracker_summary.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:state_notifier/state_notifier.dart';
 
 final trackingControllerProvider =
-    StateNotifierProvider<TrackingController, TrackerSummary>((ref) {
-      return TrackingController(
-        preferences: ref.watch(sharedPreferencesProvider),
-        firestore: ref.watch(firestoreProvider),
-        ref: ref,
-      );
-    });
+    NotifierProvider<TrackingController, TrackerSummary>(
+      TrackingController.new,
+    );
 
-class TrackingController extends StateNotifier<TrackerSummary> {
-  TrackingController({
-    required SharedPreferences preferences,
-    required FirebaseFirestore? firestore,
-    required Ref ref,
-  }) : _preferences = preferences,
-       _firestore = firestore,
-       _ref = ref,
-       super(_loadSummary(preferences, ref));
+class TrackingController extends Notifier<TrackerSummary> {
+  late final SharedPreferences _preferences;
+  late final FirebaseFirestore? _firestore;
 
-  final SharedPreferences _preferences;
-  final FirebaseFirestore? _firestore;
-  final Ref _ref;
+  @override
+  TrackerSummary build() {
+    _preferences = ref.watch(sharedPreferencesProvider);
+    _firestore = ref.watch(firestoreProvider);
+    return _loadSummary(_preferences, ref);
+  }
 
   static TrackerSummary _loadSummary(SharedPreferences prefs, Ref ref) {
     final today = _todayKey();
@@ -84,11 +76,11 @@ class TrackingController extends StateNotifier<TrackerSummary> {
       dateKey: _todayKey(),
       caloriesConsumed: 0,
       calorieTarget:
-          _ref.read(authControllerProvider).user?.dailyCalorieTarget ??
+          ref.read(authControllerProvider).user?.dailyCalorieTarget ??
           AppConstants.defaultCalorieGoal,
       waterMl: 0,
       waterTargetMl:
-          _ref.read(authControllerProvider).user?.dailyWaterTargetMl ??
+          ref.read(authControllerProvider).user?.dailyWaterTargetMl ??
           AppConstants.defaultWaterGoalMl,
     );
     _persist();
@@ -100,9 +92,10 @@ class TrackingController extends StateNotifier<TrackerSummary> {
       jsonEncode(state.toJson()),
     );
 
-    final user = _ref.read(authControllerProvider).user;
-    if (_firestore != null && user != null) {
-      await _firestore!
+    final user = ref.read(authControllerProvider).user;
+    final firestore = _firestore;
+    if (firestore != null && user != null) {
+      await firestore
           .collection(AppConfig.trackingCollection)
           .doc(user.id)
           .set(state.toJson(), SetOptions(merge: true));

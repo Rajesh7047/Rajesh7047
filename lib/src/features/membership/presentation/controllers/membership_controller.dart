@@ -4,19 +4,15 @@ import 'package:fitmitra/src/features/membership/data/services/razorpay_checkout
 import 'package:fitmitra/src/features/membership/domain/models/subscription_plan.dart';
 import 'package:fitmitra/src/shared/data/seed_data.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:state_notifier/state_notifier.dart';
 
 final membershipPlansProvider = Provider<List<SubscriptionPlan>>(
   (ref) => SeedData.membershipPlans,
 );
 
 final membershipControllerProvider =
-    StateNotifierProvider<MembershipController, MembershipState>((ref) {
-      return MembershipController(
-        checkoutService: RazorpayCheckoutService(),
-        ref: ref,
-      );
-    });
+    NotifierProvider<MembershipController, MembershipState>(
+      MembershipController.new,
+    );
 
 class MembershipState {
   const MembershipState({required this.isProcessing, this.message});
@@ -38,19 +34,17 @@ class MembershipState {
   }
 }
 
-class MembershipController extends StateNotifier<MembershipState> {
-  MembershipController({
-    required RazorpayCheckoutService checkoutService,
-    required Ref ref,
-  }) : _checkoutService = checkoutService,
-       _ref = ref,
-       super(const MembershipState.initial());
+class MembershipController extends Notifier<MembershipState> {
+  late final RazorpayCheckoutService _checkoutService;
 
-  final RazorpayCheckoutService _checkoutService;
-  final Ref _ref;
+  @override
+  MembershipState build() {
+    _checkoutService = RazorpayCheckoutService();
+    return const MembershipState.initial();
+  }
 
   Future<void> activatePlan(SubscriptionPlan plan) async {
-    final user = _ref.read(authControllerProvider).user;
+    final user = ref.read(authControllerProvider).user;
     if (user == null) {
       state = state.copyWith(message: 'Log in before upgrading your plan.');
       return;
@@ -61,7 +55,7 @@ class MembershipController extends StateNotifier<MembershipState> {
     final result = await _checkoutService.openCheckout(plan: plan, user: user);
 
     if (result.isSuccess) {
-      await _ref
+      await ref
           .read(authControllerProvider.notifier)
           .updateMembershipTier(
             plan.tier == MembershipTier.free

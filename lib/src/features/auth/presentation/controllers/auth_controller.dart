@@ -5,7 +5,6 @@ import 'package:fitmitra/src/features/auth/data/repositories/auth_repository.dar
 import 'package:fitmitra/src/features/auth/domain/models/otp_session.dart';
 import 'package:fitmitra/src/features/auth/domain/models/user_profile.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:state_notifier/state_notifier.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return FirebaseAuthRepository(
@@ -15,10 +14,8 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   );
 });
 
-final authControllerProvider = StateNotifierProvider<AuthController, AuthState>(
-  (ref) {
-    return AuthController(ref.watch(authRepositoryProvider));
-  },
+final authControllerProvider = NotifierProvider<AuthController, AuthState>(
+  AuthController.new,
 );
 
 class AuthState {
@@ -60,12 +57,19 @@ class AuthState {
   }
 }
 
-class AuthController extends StateNotifier<AuthState> {
-  AuthController(this._repository) : super(const AuthState.initial()) {
-    _restoreSession();
-  }
+class AuthController extends Notifier<AuthState> {
+  late final AuthRepository _repository;
+  var _hasRestored = false;
 
-  final AuthRepository _repository;
+  @override
+  AuthState build() {
+    _repository = ref.watch(authRepositoryProvider);
+    if (!_hasRestored) {
+      _hasRestored = true;
+      Future<void>.microtask(_restoreSession);
+    }
+    return const AuthState.initial();
+  }
 
   Future<void> _restoreSession() async {
     try {

@@ -19,8 +19,9 @@ class DietRepository {
     required WellnessGoal goal,
     required bool isPremium,
   }) async {
-    if (_firestore != null) {
-      final document = await _firestore!
+    final firestore = _firestore;
+    if (firestore != null) {
+      final document = await firestore
           .collection(AppConfig.dietPlansCollection)
           .doc(goal.name)
           .get();

@@ -4,16 +4,10 @@ import 'package:fitmitra/src/features/ai_chat/domain/models/chat_message.dart';
 import 'package:fitmitra/src/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:fitmitra/src/shared/data/seed_data.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:state_notifier/state_notifier.dart';
 import 'package:uuid/uuid.dart';
 
 final aiChatControllerProvider =
-    StateNotifierProvider<AiChatController, AiChatState>((ref) {
-      return AiChatController(
-        repository: ref.watch(aiChatRepositoryProvider),
-        ref: ref,
-      );
-    });
+    NotifierProvider<AiChatController, AiChatState>(AiChatController.new);
 
 class AiChatState {
   const AiChatState({required this.messages, required this.isTyping});
@@ -29,26 +23,20 @@ class AiChatState {
   }
 }
 
-class AiChatController extends StateNotifier<AiChatState> {
-  AiChatController({required AiChatRepository repository, required Ref ref})
-    : _repository = repository,
-      _ref = ref,
-      _uuid = const Uuid(),
-      super(
-        AiChatState(
-          messages: [
-            repository.initialGreeting(
-              ref.read(authControllerProvider).user?.goal ??
-                  WellnessGoal.weightLoss,
-            ),
-          ],
-          isTyping: false,
-        ),
-      );
+class AiChatController extends Notifier<AiChatState> {
+  late final AiChatRepository _repository;
+  final Uuid _uuid = const Uuid();
 
-  final AiChatRepository _repository;
-  final Ref _ref;
-  final Uuid _uuid;
+  @override
+  AiChatState build() {
+    _repository = ref.watch(aiChatRepositoryProvider);
+    final goal =
+        ref.read(authControllerProvider).user?.goal ?? WellnessGoal.weightLoss;
+    return AiChatState(
+      messages: [_repository.initialGreeting(goal)],
+      isTyping: false,
+    );
+  }
 
   Future<void> sendMessage(String text) async {
     final trimmed = text.trim();
@@ -56,7 +44,7 @@ class AiChatController extends StateNotifier<AiChatState> {
       return;
     }
 
-    final user = _ref.read(authControllerProvider).user;
+    final user = ref.read(authControllerProvider).user;
     final goal = user?.goal ?? WellnessGoal.weightLoss;
     final userMessage = ChatMessage(
       id: _uuid.v4(),
@@ -85,7 +73,7 @@ class AiChatController extends StateNotifier<AiChatState> {
 
   void resetConversation() {
     final goal =
-        _ref.read(authControllerProvider).user?.goal ?? WellnessGoal.weightLoss;
+        ref.read(authControllerProvider).user?.goal ?? WellnessGoal.weightLoss;
     state = AiChatState(
       messages: [_repository.initialGreeting(goal)],
       isTyping: false,
@@ -94,7 +82,7 @@ class AiChatController extends StateNotifier<AiChatState> {
 
   List<String> suggestions() {
     final goal =
-        _ref.read(authControllerProvider).user?.goal ?? WellnessGoal.weightLoss;
+        ref.read(authControllerProvider).user?.goal ?? WellnessGoal.weightLoss;
     return SeedData.promptsFor(goal);
   }
 }

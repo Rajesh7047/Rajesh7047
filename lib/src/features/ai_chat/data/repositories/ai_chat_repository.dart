@@ -39,8 +39,9 @@ class AiChatRepository {
       sentAt: DateTime.now(),
     );
 
-    if (_firestore != null && userId != null) {
-      final chatRef = _firestore!
+    final firestore = _firestore;
+    if (firestore != null && userId != null) {
+      final chatRef = firestore
           .collection(AppConfig.chatCollection)
           .doc(userId)
           .collection('messages');

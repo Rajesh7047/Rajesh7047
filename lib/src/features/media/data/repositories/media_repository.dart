@@ -19,7 +19,8 @@ class MediaRepository {
 
   Future<List<MediaContent>> getLibrary() async {
     final content = SeedData.mediaLibrary;
-    if (_storage == null) {
+    final storage = _storage;
+    if (storage == null) {
       return content;
     }
 
@@ -31,7 +32,7 @@ class MediaRepository {
       }
 
       try {
-        final url = await _storage!
+        final url = await storage
             .ref(item.storageThumbnailPath)
             .getDownloadURL();
         resolved.add(item.copyWith(imageUrl: url));

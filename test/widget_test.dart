@@ -25,7 +25,8 @@ void main() {
       ),
     );
 
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
 
     expect(find.text('FitMitra'), findsOneWidget);
     expect(find.text('Send OTP'), findsOneWidget);

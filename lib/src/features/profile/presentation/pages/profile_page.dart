@@ -1,3 +1,5 @@
+import 'package:fitmitra/src/core/models/membership_tier.dart';
+import 'package:fitmitra/src/core/models/wellness_goal.dart';
 import 'package:fitmitra/src/core/providers/core_providers.dart';
 import 'package:fitmitra/src/core/theme/theme_mode_controller.dart';
 import 'package:fitmitra/src/core/widgets/app_card.dart';

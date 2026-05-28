@@ -1,4 +1,5 @@
 import 'package:fitmitra/src/core/widgets/app_card.dart';
+import 'package:fitmitra/src/core/models/wellness_goal.dart';
 import 'package:fitmitra/src/features/ai_chat/presentation/controllers/ai_chat_controller.dart';
 import 'package:fitmitra/src/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';

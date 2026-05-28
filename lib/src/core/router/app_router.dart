@@ -35,6 +35,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       }
 
       if (!authState.isAuthenticated) {
+        if (location == '/splash') {
+          return '/login';
+        }
         return isPublicPath ? null : '/login';
       }
 

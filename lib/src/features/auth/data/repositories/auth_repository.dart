@@ -33,17 +33,19 @@ class FirebaseAuthRepository implements AuthRepository {
     required FirebaseAuth? auth,
     required FirebaseFirestore? firestore,
     required SharedPreferences preferences,
-  }) : _auth = auth,
-       _firestore = firestore,
-       _preferences = preferences;
+  }) : this._(auth: auth, firestore: firestore, preferences: preferences);
+
+  FirebaseAuthRepository._({
+    required this._auth,
+    required this._firestore,
+    required this._preferences,
+  });
 
   final FirebaseAuth? _auth;
   final FirebaseFirestore? _firestore;
   final SharedPreferences _preferences;
   final _uuid = const Uuid();
   final Map<String, ConfirmationResult> _webSessions = {};
-
-  bool get _canUseFirebase => _auth != null;
 
   @override
   Future<UserProfile?> restoreSession() async {
@@ -52,11 +54,12 @@ class FirebaseAuthRepository implements AuthRepository {
         ? null
         : UserProfile.fromJson(jsonDecode(cached) as Map<String, dynamic>);
 
-    if (!_canUseFirebase) {
+    final auth = _auth;
+    if (auth == null) {
       return cachedProfile;
     }
 
-    final currentUser = _auth!.currentUser;
+    final currentUser = auth.currentUser;
     if (currentUser == null) {
       return cachedProfile;
     }
@@ -66,7 +69,8 @@ class FirebaseAuthRepository implements AuthRepository {
 
   @override
   Future<OtpSession> requestOtp(String phoneNumber) async {
-    if (!_canUseFirebase || !AppConfig.enableDemoFallbacks) {
+    final auth = _auth;
+    if (auth == null) {
       return OtpSession(
         sessionId: _uuid.v4(),
         phoneNumber: phoneNumber,
@@ -76,7 +80,7 @@ class FirebaseAuthRepository implements AuthRepository {
     }
 
     if (kIsWeb) {
-      final confirmation = await _auth!.signInWithPhoneNumber(phoneNumber);
+      final confirmation = await auth.signInWithPhoneNumber(phoneNumber);
       final sessionId = _uuid.v4();
       _webSessions[sessionId] = confirmation;
       return OtpSession(
@@ -88,7 +92,7 @@ class FirebaseAuthRepository implements AuthRepository {
 
     final completer = Completer<OtpSession>();
 
-    await _auth!.verifyPhoneNumber(
+    await auth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: (_) {},
       verificationFailed: (error) {
@@ -126,7 +130,8 @@ class FirebaseAuthRepository implements AuthRepository {
     required OtpSession session,
     required String otpCode,
   }) async {
-    if (session.isMock || !_canUseFirebase) {
+    final auth = _auth;
+    if (session.isMock || auth == null) {
       final demoProfile = UserProfile(
         id: _uuid.v4(),
         phoneNumber: session.phoneNumber,
@@ -149,7 +154,7 @@ class FirebaseAuthRepository implements AuthRepository {
       }
       credential = await confirmation.confirm(otpCode);
     } else {
-      credential = await _auth!.signInWithCredential(
+      credential = await auth.signInWithCredential(
         PhoneAuthProvider.credential(
           verificationId: session.sessionId,
           smsCode: otpCode,
@@ -174,8 +179,9 @@ class FirebaseAuthRepository implements AuthRepository {
   @override
   Future<UserProfile> updateProfile(UserProfile profile) async {
     await _persistProfile(profile);
-    if (_firestore != null) {
-      await _firestore!
+    final firestore = _firestore;
+    if (firestore != null) {
+      await firestore
           .collection(AppConfig.usersCollection)
           .doc(profile.id)
           .set(profile.toJson(), SetOptions(merge: true));
@@ -197,8 +203,9 @@ class FirebaseAuthRepository implements AuthRepository {
           streak: 7,
         );
 
-    if (_firestore != null) {
-      final document = await _firestore!
+    final firestore = _firestore;
+    if (firestore != null) {
+      final document = await firestore
           .collection(AppConfig.usersCollection)
           .doc(user.uid)
           .get();
@@ -212,7 +219,7 @@ class FirebaseAuthRepository implements AuthRepository {
         displayName: user.displayName ?? profile.displayName,
       );
 
-      await _firestore!
+      await firestore
           .collection(AppConfig.usersCollection)
           .doc(user.uid)
           .set(profile.toJson(), SetOptions(merge: true));
