@@ -3,8 +3,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/custom_card.dart';
-import '../../../../core/widgets/section_header.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class RecipesScreen extends StatefulWidget {
   const RecipesScreen({super.key});

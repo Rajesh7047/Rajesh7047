@@ -4,8 +4,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/custom_card.dart';
-import '../../../../core/widgets/section_header.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../data/models/product_model.dart';
 
 final selectedProductGoalProvider = StateProvider<String>((ref) => 'All');
@@ -16,7 +14,6 @@ class ProductsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedGoal = ref.watch(selectedProductGoalProvider);
-    final userAsync = ref.watch(userProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final filtered = selectedGoal == 'All'

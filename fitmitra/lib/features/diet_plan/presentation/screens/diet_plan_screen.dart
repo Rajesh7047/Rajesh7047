@@ -5,7 +5,6 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/custom_card.dart';
 import '../../../../core/widgets/section_header.dart';
-import '../../../../core/widgets/premium_badge.dart';
 import '../../data/models/diet_plan_model.dart';
 
 final selectedGoalProvider = StateProvider<String>((ref) => 'Weight Loss');

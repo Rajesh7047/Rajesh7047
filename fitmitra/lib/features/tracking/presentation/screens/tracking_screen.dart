@@ -84,7 +84,6 @@ class TrackingScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tracking = ref.watch(trackingProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: const CustomAppBar(title: 'Daily Tracking'),
