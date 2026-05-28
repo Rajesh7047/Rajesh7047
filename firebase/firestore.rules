@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+
+      match /daily_tracking/{dateKey} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /ai_chat_history/{messageId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    match /diet_plans/{planId} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+
+    match /videos/{videoId} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+
+    match /products/{productId} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+
+    match /mentor_sessions/{sessionId} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+
+    match /memberships/{membershipId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if false;
+    }
+  }
+}
