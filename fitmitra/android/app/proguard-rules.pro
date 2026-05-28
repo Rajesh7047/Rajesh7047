@@ -1,0 +1,12 @@
+-keep class io.flutter.** { *; }
+-keep class io.flutter.plugins.** { *; }
+-keep class com.google.firebase.** { *; }
+-keep class com.razorpay.** { *; }
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
+-dontwarn com.razorpay.**
+-keep class com.razorpay.** {*;}
+-optimizationpasses 5
+-dontusemixedcaseclassnames
+-keeppackagenames doNotKeepAThing
