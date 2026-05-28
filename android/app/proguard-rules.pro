@@ -1,0 +1,4 @@
+-keep class com.razorpay.** { *; }
+-keep class io.flutter.plugins.firebase.** { *; }
+-keepattributes *Annotation*
+-dontwarn com.razorpay.**
