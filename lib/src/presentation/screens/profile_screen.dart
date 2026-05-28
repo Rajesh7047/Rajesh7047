@@ -97,7 +97,7 @@ class ProfileScreen extends ConsumerWidget {
   String _initialFor(String? value) {
     final trimmed = value?.trim();
     if (trimmed == null || trimmed.isEmpty) return 'G';
-    return trimmed.characters.first.toUpperCase();
+    return trimmed.substring(0, 1).toUpperCase();
   }
 
 }
