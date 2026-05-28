@@ -1,0 +1,3 @@
+-keep class io.flutter.embedding.** { *; }
+-keep class com.razorpay.** { *; }
+-dontwarn com.razorpay.**
