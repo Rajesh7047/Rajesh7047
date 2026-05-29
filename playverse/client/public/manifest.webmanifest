@@ -1,0 +1,40 @@
+{
+  "name": "PlayVerse Gaming Marketplace",
+  "short_name": "PlayVerse",
+  "description": "Discover, buy, install, and review PC games from a premium gaming marketplace.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#070915",
+  "background_color": "#070915",
+  "categories": ["games", "shopping", "entertainment"],
+  "icons": [
+    {
+      "src": "/playverse-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/playverse-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Browse Store",
+      "short_name": "Store",
+      "description": "Open the PlayVerse game catalog.",
+      "url": "/?view=store"
+    },
+    {
+      "name": "My Library",
+      "short_name": "Library",
+      "description": "Open your owned game library.",
+      "url": "/?view=library"
+    }
+  ]
+}

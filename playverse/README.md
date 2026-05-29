@@ -29,6 +29,26 @@ npm run dev:client
 - Client: http://localhost:5173
 - API health: http://localhost:4000/api/health
 
+## Build as an installable application
+
+PlayVerse is also configured as a Progressive Web App (PWA), so the production client can be installed from Chrome, Edge, or other supported browsers as a desktop/mobile application.
+
+```bash
+cd playverse
+npm run build
+npm run preview --workspace client
+```
+
+Then open the preview URL, use the **Install app** button in the PlayVerse header, or choose the browser's install option from the address bar/menu.
+
+Application features included:
+
+- `manifest.webmanifest` with app identity, shortcuts, theme color, and icons
+- SVG application icons, including a maskable icon
+- Production service worker registration
+- Cached app shell and offline fallback screen
+- Standalone display mode for desktop/mobile launchers
+
 ## Seeded accounts
 
 | Role | Email | Password |
@@ -77,6 +97,7 @@ npm run typecheck    # Type-check both workspaces
 - License key and installer-link generation after payment
 - Test coverage for catalog, auth, checkout, review authorization, and admin publishing
 - Responsive storefront with fallbacks for demo browsing if the API is offline
+- Installable PWA shell with offline fallback behavior
 
 ## Production next steps
 

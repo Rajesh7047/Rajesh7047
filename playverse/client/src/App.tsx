@@ -7,6 +7,11 @@ import type { CartView, Game, Purchase, User } from "./types";
 
 type View = "store" | "library" | "cart" | "admin";
 
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+}
+
 const navigation: Array<{ id: View; label: string }> = [
   { id: "store", label: "Store" },
   { id: "library", label: "Library" },
@@ -33,6 +38,25 @@ export default function App() {
   const [recommendations, setRecommendations] = useState<Game[]>([]);
   const [notice, setNotice] = useState("Live demo mode: use seeded PlayVerse accounts or run the API for full persistence.");
   const [analytics, setAnalytics] = useState({ totalRevenue: 0, totalOrders: 0, totalUsers: 0, activeGames: 0 });
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as BeforeInstallPromptEvent);
+    };
+    const handleInstalled = () => {
+      setInstallPrompt(null);
+      setNotice("PlayVerse is installed. Launch it from your desktop, dock, or app launcher.");
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener("appinstalled", handleInstalled);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      window.removeEventListener("appinstalled", handleInstalled);
+    };
+  }, []);
 
   useEffect(() => {
     getCatalog(search, genre, sort).then(({ games: catalog, genres: nextGenres }) => {
@@ -81,6 +105,18 @@ export default function App() {
     setView("library");
   }
 
+  async function handleInstallApp() {
+    if (!installPrompt) {
+      setNotice("Install PlayVerse from your browser menu after opening the production build over HTTPS or localhost.");
+      return;
+    }
+
+    await installPrompt.prompt();
+    const choice = await installPrompt.userChoice;
+    setInstallPrompt(null);
+    setNotice(choice.outcome === "accepted" ? "PlayVerse installation started." : "PlayVerse installation was dismissed.");
+  }
+
   return (
     <main>
       <header className="site-header">
@@ -98,6 +134,9 @@ export default function App() {
           ))}
         </nav>
         <div className="account">
+          <button className="secondary install-button" onClick={handleInstallApp}>
+            Install app
+          </button>
           {user ? (
             <button className="profile-pill" onClick={() => setView(user.role === "admin" ? "admin" : "library")}>
               <span>{user.avatar}</span>
