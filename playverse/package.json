@@ -1,0 +1,19 @@
+{
+  "name": "playverse",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test -w backend",
+    "build": "npm run build -w backend && npm run build -w frontend",
+    "lint": "npm run lint -w backend && npm run lint -w frontend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
+}

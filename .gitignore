@@ -1,0 +1,8 @@
+/playverse/node_modules/
+/playverse/backend/node_modules/
+/playverse/frontend/node_modules/
+/playverse/backend/dist/
+/playverse/frontend/dist/
+/playverse/.env
+/playverse/backend/.env
+/playverse/frontend/.env
