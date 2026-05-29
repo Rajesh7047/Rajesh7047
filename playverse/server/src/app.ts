@@ -6,7 +6,7 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import jwt from "jsonwebtoken";
 import { nanoid } from "nanoid";
-import pinoHttp from "pino-http";
+import { pinoHttp } from "pino-http";
 import { z } from "zod";
 import { PlayVerseStore } from "./store.js";
 import type { CompatibilityReport, Game, Purchase, SystemRequirements, User } from "./types.js";
@@ -73,6 +73,9 @@ const checkoutSchema = z.object({
   paymentProvider: z.enum(["card", "paypal", "stripe"]).default("card"),
   systemProfile: requirementsSchema.optional()
 });
+
+const gameIdParamSchema = z.object({ gameId: z.string().min(1) });
+const idOrSlugParamSchema = z.object({ idOrSlug: z.string().min(1) });
 
 function signToken(user: User): string {
   return jwt.sign({ sub: user.id, role: user.role }, jwtSecret, { expiresIn: "8h" });
@@ -277,7 +280,8 @@ export async function createApp() {
   });
 
   app.get("/api/games/:idOrSlug", (req, res) => {
-    const game = store.findGame(req.params.idOrSlug);
+    const { idOrSlug } = idOrSlugParamSchema.parse(req.params);
+    const game = store.findGame(idOrSlug);
     if (!game || !game.active) {
       res.status(404).json({ error: "Game not found" });
       return;
@@ -328,7 +332,8 @@ export async function createApp() {
   });
 
   app.delete("/api/cart/:gameId", auth, (req: AuthenticatedRequest, res) => {
-    store.removeFromCart(req.user!.id, req.params.gameId);
+    const { gameId } = gameIdParamSchema.parse(req.params);
+    store.removeFromCart(req.user!.id, gameId);
     res.json(cartPayload(store, req.user!.id));
   });
 
@@ -349,7 +354,8 @@ export async function createApp() {
   });
 
   app.delete("/api/wishlist/:gameId", auth, (req: AuthenticatedRequest, res) => {
-    const wishlistGameIds = store.removeWishlist(req.user!.id, req.params.gameId);
+    const { gameId } = gameIdParamSchema.parse(req.params);
+    const wishlistGameIds = store.removeWishlist(req.user!.id, gameId);
     res.json({ wishlistGameIds });
   });
 
@@ -370,12 +376,13 @@ export async function createApp() {
 
   app.post("/api/games/:gameId/reviews", auth, (req: AuthenticatedRequest, res, next) => {
     try {
-      if (!req.user!.ownedGameIds.includes(req.params.gameId)) {
+      const { gameId } = gameIdParamSchema.parse(req.params);
+      if (!req.user!.ownedGameIds.includes(gameId)) {
         res.status(403).json({ error: "Only owners can review this game" });
         return;
       }
       const input = reviewSchema.parse(req.body);
-      const review = store.addReview({ ...input, gameId: req.params.gameId, userId: req.user!.id });
+      const review = store.addReview({ ...input, gameId, userId: req.user!.id });
       res.status(201).json({ review });
     } catch (error) {
       next(error);
@@ -408,7 +415,8 @@ export async function createApp() {
   });
 
   app.patch("/api/admin/games/:gameId", auth, requireAdmin, (req, res) => {
-    const game = store.updateGame(req.params.gameId, req.body);
+    const { gameId } = gameIdParamSchema.parse(req.params);
+    const game = store.updateGame(gameId, req.body);
     if (!game) {
       res.status(404).json({ error: "Game not found" });
       return;
