@@ -1,0 +1,27 @@
+{
+  "name": "playverse",
+  "version": "1.0.0",
+  "description": "PlayVerse full-stack gaming marketplace built from the project report.",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --workspace server",
+    "dev:server": "npm run dev --workspace server",
+    "dev:client": "npm run dev --workspace client",
+    "build": "npm run build --workspace server && npm run build --workspace client",
+    "test": "npm run test --workspace server",
+    "typecheck": "npm run typecheck --workspace server && npm run typecheck --workspace client"
+  },
+  "keywords": [
+    "playverse",
+    "gaming",
+    "marketplace",
+    "react",
+    "express"
+  ],
+  "author": "PlayVerse",
+  "license": "MIT",
+  "workspaces": [
+    "server",
+    "client"
+  ]
+}

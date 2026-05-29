@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">PlayVerse maskable app icon</title>
+  <defs>
+    <radialGradient id="glow" cx="35%" cy="20%" r="80%">
+      <stop stop-color="#70f6ff" />
+      <stop offset="0.42" stop-color="#7c5cff" />
+      <stop offset="1" stop-color="#120820" />
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#glow)" />
+  <circle cx="256" cy="256" r="178" fill="#080c1c" opacity="0.82" />
+  <path
+    fill="#ffffff"
+    d="M166 190c-42 0-76 34-76 76v18c0 42 34 76 76 76 27 0 51-15 64-36h52c13 21 37 36 64 36 42 0 76-34 76-76v-18c0-42-34-76-76-76H166Zm-14 55h31v-31h34v31h31v34h-31v31h-34v-31h-31v-34Zm181 14a26 26 0 1 1 52 0 26 26 0 0 1-52 0Zm-41 50a21 21 0 1 1 42 0 21 21 0 0 1-42 0Z"
+  />
+</svg>
