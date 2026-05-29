@@ -1,0 +1,152 @@
+:root {
+  --pv-bg: #0a0e17;
+  --pv-surface: #12182a;
+  --pv-surface-2: #1a2238;
+  --pv-border: rgba(255, 255, 255, 0.08);
+  --pv-primary: #6c5ce7;
+  --pv-primary-hover: #7d6ff0;
+  --pv-accent: #00f5d4;
+  --pv-accent-dim: rgba(0, 245, 212, 0.15);
+  --pv-danger: #ff6b6b;
+  --pv-text: #f0f4ff;
+  --pv-muted: #8b95b5;
+  --pv-radius: 14px;
+  --pv-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  --font-display: 'Orbitron', sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--pv-bg);
+  color: var(--pv-text);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(108, 92, 231, 0.25), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(0, 245, 212, 0.08), transparent);
+}
+
+a {
+  color: var(--pv-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  color: #5eead4;
+}
+
+.pv-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.pv-btn-primary {
+  background: linear-gradient(135deg, var(--pv-primary), #5a4bd1);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.65rem 1.35rem;
+  border-radius: 999px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.pv-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(108, 92, 231, 0.45);
+  color: #fff;
+}
+
+.pv-btn-outline {
+  background: transparent;
+  border: 1px solid var(--pv-border);
+  color: var(--pv-text);
+  padding: 0.65rem 1.35rem;
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+.pv-btn-outline:hover {
+  border-color: var(--pv-accent);
+  color: var(--pv-accent);
+  background: var(--pv-accent-dim);
+}
+
+.pv-card {
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.pv-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--pv-shadow);
+  border-color: rgba(108, 92, 231, 0.4);
+}
+
+.pv-badge {
+  background: var(--pv-accent-dim);
+  color: var(--pv-accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+}
+
+.pv-price {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--pv-accent);
+}
+
+.pv-price-old {
+  text-decoration: line-through;
+  color: var(--pv-muted);
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+  color: var(--pv-muted);
+  margin-bottom: 2rem;
+}
+
+.form-control,
+.form-select {
+  background: var(--pv-surface-2) !important;
+  border-color: var(--pv-border) !important;
+  color: var(--pv-text) !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--pv-primary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(108, 92, 231, 0.25) !important;
+}
+
+.form-label {
+  color: var(--pv-muted);
+  font-size: 0.9rem;
+}
+
+.alert {
+  border-radius: var(--pv-radius);
+}
+
+.table-dark {
+  --bs-table-bg: var(--pv-surface);
+  --bs-table-border-color: var(--pv-border);
+}
