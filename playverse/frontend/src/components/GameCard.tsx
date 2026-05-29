@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { Game } from "../types";
+import type { Game } from "../types";
 
 interface Props {
   game: Game;

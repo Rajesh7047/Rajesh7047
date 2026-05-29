@@ -18,6 +18,7 @@ export interface Game {
   id: string;
   slug: string;
   title: string;
+  active: boolean;
   publisher: string;
   genre: string;
   description: string;

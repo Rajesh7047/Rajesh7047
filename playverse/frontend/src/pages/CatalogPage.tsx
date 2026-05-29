@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../api";
 import { useAuth } from "../auth";
 import { GameCard } from "../components/GameCard";
-import { Game } from "../types";
+import type { Game } from "../types";
 
 const sortOptions = [
   { value: "popular", label: "Popularity" },

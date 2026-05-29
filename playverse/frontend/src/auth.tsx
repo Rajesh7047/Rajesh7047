@@ -1,5 +1,6 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useMemo, useState } from "react";
-import { User } from "./types";
+import type { User } from "./types";
 
 interface AuthState {
   token: string | null;

@@ -1,4 +1,4 @@
-import { CartResponse, Game, Order, User } from "./types";
+import type { CartResponse, Game, Order, User } from "./types";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:4000";
 
